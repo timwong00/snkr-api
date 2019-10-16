@@ -6,8 +6,7 @@ const collectionSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Sneaker",
     required: true
-  },
-  quantity: { type: Number, default: 1 }
+  }
 });
 
 module.exports = mongoose.model("Collection", collectionSchema);

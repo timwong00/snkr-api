@@ -4,7 +4,7 @@ const Sneaker = require("../models/sneaker");
 
 exports.collection_get_all = (req, res, next) => {
   Collection.find()
-    .select("sneaker quantity _id")
+    .select("-__v")
     .populate("sneaker", "name")
     .exec()
     .then(docs => {
@@ -17,7 +17,7 @@ exports.collection_get_all = (req, res, next) => {
             quantity: doc.quantity,
             request: {
               type: "GET",
-              url: "http:localhost:3000/collection/" + doc._id
+              url: "http://localhost:3000/collection/" + doc._id
             }
           };
         })
@@ -35,7 +35,7 @@ exports.collection_add_sneaker = (req, res, next) => {
     .then(sneaker => {
       if (!sneaker) {
         return res.status(404).json({
-          message: "Sneaker not found"
+          message: "Sneaker not found in the catalogue"
         });
       }
       const collection = new Collection({
@@ -50,7 +50,7 @@ exports.collection_add_sneaker = (req, res, next) => {
         message: "Collection saved.",
         savedCollection: {
           _id: result._id,
-          sneaker: result.sneaker,
+          // sneaker: result.sneaker,
           quantity: result.quantity
         },
         request: {
@@ -66,6 +66,73 @@ exports.collection_add_sneaker = (req, res, next) => {
     });
 };
 
-exports.collection_get_sneaker = (req, res, next) => {};
+exports.collection_get_collection = (req, res, next) => {
+  Collection.findById(req.params.collectionId)
+    .select("-__v")
+    .populate("sneaker", "-__v")
+    .exec()
+    .then(collection => {
+      if (!collection) {
+        return res.status(404).json({
+          message: "Collection not found"
+        });
+      }
+      res.status(200).json({
+        collection: collection,
+        request: {
+          type: "GET",
+          url: "http://localhost:3000/collection"
+        }
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+};
 
-exports.collection_delete_sneaker = (req, res, next) => {};
+exports.collection_update_sneaker = (req, res, next) => {
+  const id = req.params.collectionId;
+  const updateOps = {};
+  for (const ops of req.body) {
+    updateOps[ops.propName] = ops.value;
+  }
+  Collection.update({ _id: id }, { $set: updateOps })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+        message: "Collection updated",
+        request: {
+          type: "GET",
+          url: "http://localhost:3000/collection/" + id
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+};
+
+exports.collection_delete_collection = (req, res, next) => {
+  Collection.deleteOne({ _id: req.params.collectionId })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+        message: "Collection deleted",
+        request: {
+          type: "POST",
+          url: "http://localhost:3000/collection",
+          body: { userID: "ID", quantity: "Number" }
+        }
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+};

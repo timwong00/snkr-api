@@ -38,8 +38,9 @@ router.post(
 );
 
 router.get("/:sneakerId", SneakersController.sneakers_get_sneaker);
-module.exports = router;
 
 router.patch("/:sneakerId", SneakersController.sneaker_update);
 
 router.delete("/:sneakerId", SneakersController.sneaker_delete);
+
+module.exports = router;

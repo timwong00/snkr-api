@@ -3,7 +3,8 @@ const Sneaker = require("../models/sneaker");
 
 exports.sneakers_get_all = (req, res, next) => {
   Sneaker.find()
-    .select("brand name retailPrice size colorway sneakerImage _id")
+    // .select("brand name retailPrice size colorway sneakerImage _id")
+    .select("-__v")
     .exec()
     .then(docs => {
       const response = {
@@ -49,7 +50,7 @@ exports.sneakers_add_sneaker = (req, res, next) => {
     .then(result => {
       console.log(result);
       res.status(201).json({
-        message: "Sneaker added successfully.",
+        message: "Sneaker added successfully to the catalogue.",
         addedSneaker: {
           brand: result.brand,
           name: result.name,
@@ -75,7 +76,8 @@ exports.sneakers_add_sneaker = (req, res, next) => {
 exports.sneakers_get_sneaker = (req, res, next) => {
   const id = req.params.sneakerId;
   Sneaker.findById(id)
-    .select("brand name retailPrice size colorway sneakerImage _id")
+    // .select("brand name retailPrice size colorway sneakerImage _id")
+    .select("-__v")
     .exec()
     .then(doc => {
       console.log("From Database: ", doc);
@@ -90,7 +92,7 @@ exports.sneakers_get_sneaker = (req, res, next) => {
         });
       } else {
         res.status(404).json({
-          message: "No valid sneaker found for the provided ID"
+          message: "No valid sneaker found in the catalogue for the provided ID"
         });
       }
     })
@@ -112,7 +114,7 @@ exports.sneaker_update = (req, res, next) => {
     .then(result => {
       console.log(result);
       res.status(200).json({
-        message: `Product ${id} has been updated.`,
+        message: `Sneaker ID ${id} has been updated.`,
         request: {
           type: "GET",
           url: "http://localhost:3000/sneakers/" + id
