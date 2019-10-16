@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-
+const checkAuth = require("../middleware/check-auth");
 const SneakersController = require("../controllers/sneakers");
 
 const storage = multer.diskStorage({
@@ -33,14 +33,15 @@ router.get("/", SneakersController.sneakers_get_all);
 
 router.post(
   "/",
+  checkAuth,
   upload.single("sneakerImage"),
   SneakersController.sneakers_add_sneaker
 );
 
 router.get("/:sneakerId", SneakersController.sneakers_get_sneaker);
 
-router.patch("/:sneakerId", SneakersController.sneaker_update);
+router.patch("/:sneakerId", checkAuth, SneakersController.sneaker_update);
 
-router.delete("/:sneakerId", SneakersController.sneaker_delete);
+router.delete("/:sneakerId", checkAuth, SneakersController.sneaker_delete);
 
 module.exports = router;

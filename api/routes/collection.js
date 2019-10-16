@@ -3,14 +3,19 @@ const router = express.Router();
 
 const CollectionController = require("../controllers/collection");
 
-router.get("/", CollectionController.collection_get_all);
+router.get("/", checkAuth, CollectionController.collection_get_all);
 
-router.get("/:collectionId", CollectionController.collection_get_collection);
+router.get(
+  "/:collectionId",
+  checkAuth,
+  CollectionController.collection_get_collection
+);
 
-router.post("/", CollectionController.collection_add_sneaker);
+router.post("/", checkAuth, CollectionController.collection_add_sneaker);
 
 router.delete(
   "/:collectionId",
+  checkAuth,
   CollectionController.collection_delete_collection
 );
 
