@@ -3,15 +3,16 @@ const Sneaker = require("../models/sneaker");
 
 exports.sneakers_get_all = (req, res, next) => {
   Sneaker.find()
-    .select("name price size colorway sneakerImage _id")
+    .select("brand name retailPrice size colorway sneakerImage _id")
     .exec()
     .then(docs => {
       const response = {
         count: docs.length,
         sneakers: docs.map(doc => {
           return {
+            brand: doc.brand,
             name: doc.name,
-            price: doc.price,
+            retailPrice: doc.retailPrice,
             size: doc.size,
             colorway: doc.colorway,
             sneakerImage: doc.sneakerImage,
@@ -36,8 +37,9 @@ exports.sneakers_get_all = (req, res, next) => {
 exports.sneakers_add_sneaker = (req, res, next) => {
   const sneaker = new Sneaker({
     _id: new mongoose.Types.ObjectId(),
+    brand: req.body.brand,
     name: req.body.name,
-    price: req.body.price,
+    retailPrice: req.body.retailPrice,
     size: req.body.size,
     colorway: req.body.colorway,
     sneakerImage: req.file.path
@@ -49,8 +51,9 @@ exports.sneakers_add_sneaker = (req, res, next) => {
       res.status(201).json({
         message: "Sneaker added successfully.",
         addedSneaker: {
+          brand: result.brand,
           name: result.name,
-          price: result.price,
+          retailPrice: result.retailPrice,
           size: result.size,
           colorway: result.colorway,
           _id: result._id,
@@ -72,7 +75,7 @@ exports.sneakers_add_sneaker = (req, res, next) => {
 exports.sneakers_get_sneaker = (req, res, next) => {
   const id = req.params.sneakerId;
   Sneaker.findById(id)
-    .select("name price size colorway sneakerImage _id")
+    .select("brand name retailPrice size colorway sneakerImage _id")
     .exec()
     .then(doc => {
       console.log("From Database: ", doc);
@@ -134,8 +137,9 @@ exports.sneaker_delete = (req, res, next) => {
           type: "POST",
           url: "http://localhost:3000/sneakers",
           body: {
+            brand: "String",
             name: "String",
-            price: "Number",
+            retailPrice: "Number",
             size: "String",
             colorway: "String"
           }
