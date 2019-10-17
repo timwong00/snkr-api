@@ -59,22 +59,20 @@ exports.portfolio_get_portfolio = (req, res, next) => {
 
 // fix?
 exports.portfolio_create_portfolio = (req, res, next) => {
-  Sneaker.findById(req.body.sneakerId).then(sneaker => {
-    if (!sneaker) {
-      return res.status(404).json({
-        message: "Sneaker not found in the catalogue"
+  Sneaker.findById(req.body.sneakerId)
+    .then(sneaker => {
+      if (!sneaker) {
+        return res.status(404).json({
+          message: "Sneaker not found in the catalogue"
+        });
+      }
+      const portfolio = new Portfolio({
+        _id: mongoose.Types.ObjectId(),
+        name: req.body.name,
+        sneaker: req.body.sneakerId
       });
-    }
-    const portfolio = new Portfolio({
-      _id: mongoose.Types.ObjectId(),
-      name: req.body.name,
-      sneaker: req.body.sneakerId,
-      streetwear: req.body.streetwearId
-    });
-    return portfolio.save();
-  });
-  portfolio
-    .save()
+      return portfolio.save();
+    })
     .then(result => {
       console.log(result);
       res.status(201).json({
@@ -82,8 +80,7 @@ exports.portfolio_create_portfolio = (req, res, next) => {
         savedPortfolio: {
           _id: result._id,
           name: result.name,
-          sneaker: result.sneaker,
-          streetwear: result.streetwear
+          sneaker: result.sneaker
         },
         request: {
           type: "GET",

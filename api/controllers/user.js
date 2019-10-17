@@ -89,6 +89,7 @@ exports.user_delete = (req, res, next) => {
   User.deleteOne({ _id: req.params.userId })
     .exec()
     .then(result => {
+      console.log(result);
       res.status(200).json({
         message: "User has been deleted"
       });

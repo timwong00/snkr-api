@@ -7,7 +7,7 @@ const sneakerSchema = mongoose.Schema({
   retailPrice: { type: Number, required: true },
   size: { type: String, required: true },
   colorway: { type: String, required: true },
-  sneakerImage: { type: String }
+  sneakerImage: { type: String, required: true }
 });
 
 module.exports = mongoose.model("Sneaker", sneakerSchema);
