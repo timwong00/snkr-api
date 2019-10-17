@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const sneakerRoutes = require("./api/routes/sneakers");
-const collectionRoutes = require("./api/routes/collection");
+const portfolioRoutes = require("./api/routes/portfolio");
 const userRoutes = require("./api/routes/user");
 
 mongoose.connect(
@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/sneakers", sneakerRoutes);
-app.use("/collection", collectionRoutes);
+app.use("/portfolio", portfolioRoutes);
 app.use("/user", userRoutes);
 
 app.use((req, res, next) => {

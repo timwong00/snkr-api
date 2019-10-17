@@ -42,6 +42,6 @@ router.get("/:sneakerId", SneakersController.sneakers_get_sneaker);
 
 router.patch("/:sneakerId", checkAuth, SneakersController.sneaker_update);
 
-router.delete("/:sneakerId", checkAuth, SneakersController.sneaker_delete);
+router.delete("/:sneakerId", SneakersController.sneaker_delete);
 
 module.exports = router;
